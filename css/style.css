@@ -1,0 +1,72 @@
+@font-face{
+    font-family: "Prompt";
+    src: url("../fonts/Prompt-Bold.ttf");
+}
+/* @font-face {
+    font-family: "Promt";
+    src: url("../fonts/Prompt-ExtraBold.ttf");
+}
+@font-face {
+    font-family: "Promt";
+    src: url("../fonts/Prompt-Medium.ttf");
+}
+@font-face {
+    font-family: "Promt";
+    src: url("../fonts/Prompt-Regular.ttf");
+}
+@font-face {
+    font-family: "Promt";
+    src: url("../fonts/Prompt-SemiBold.ttf");
+} */
+
+* {
+    font-family: "Prompt" !important;
+}
+h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+/* .css-k1vhr4{
+    padding-left: 30px;
+    padding-right: 30px;
+} */
+
+#root>div:nth-child(1)>div.withScreencast>div>div>div>section.main.css-k1vhr4.egzxvld5>div.block-container.css-k1ih3n.egzxvld4>div:nth-child(1)>div>div:nth-child(3)>div {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#root>div:nth-child(1)>div.withScreencast>div>div>div>section.main.css-k1vhr4.egzxvld5>div.block-container.css-k1ih3n.egzxvld4>div:nth-child(1)>div>div:nth-child(3)>div>div:nth-child(2)>div>div:nth-child(1)>div>div{
+    background-color: none;
+    /* width: calc(100% - 1rem);
+    flex: 1 1 calc(100% - 1rem); */
+    padding:0 ;
+    border-radius: 0;
+    text-align: end;
+}
+#root>div:nth-child(1)>div.withScreencast>div>div>div>section.main.css-k1vhr4.egzxvld5>div.block-container.css-k1ih3n.egzxvld4>div:nth-child(1)>div>div.css-ocqkz7.e1tzin5v4>div{
+    text-align: end;
+}
+#root>div:nth-child(1)>div.withScreencast>div>div>div>section.main.css-k1vhr4.egzxvld5>div.block-container.css-k1ih3n.egzxvld4>div:nth-child(1)>div>div:nth-child(3)>div>div:nth-child(1)>div>div:nth-child(1)>div>div>div:nth-child(4)>div:nth-child(1)>div>div:nth-child(2)>div>div>p{
+    font-size: 10px;
+    margin: 0;
+    color: red;
+}
+
+
+.css-6qob1r{
+    background: linear-gradient(129deg, rgba(208, 2, 27, 1) 0%, rgba(233, 98, 75, 1) 100%);
+    color: #FFC600;
+}
+
+.css-15zws4i{
+    color: #FFC600 !important;
+}
+.css-1aw8i8e{
+    color: #FFC600 !important;
+}
+
+.css-aoxipv p {
+    color: #000;
+}
