@@ -17,6 +17,7 @@ def profit():
     prof = prof + ('OUE1','OUE2','OUE3')
     return prof
 
+
 def patch():
     prof = ()
     prof = prof + ('CHERRY1','CHERRY2','CHERRY3')
