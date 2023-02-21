@@ -11,6 +11,7 @@ st.set_page_config(
     page_icon=None,
 )
 
+
 with open('./css/style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
@@ -23,38 +24,24 @@ def main():
     # str(datetime.datetime.now().year)+"/"+"01/01", "%Y/%m/%d")
 
     if 'max_date' not in st.session_state:
-        st.session_state.max_date = datetime.datetime.now()
-        
-    if 'min_date' not in st.session_state:
-        st.session_state.min_date = datetime.datetime.now()
+        st.session_state.max_date = datetime.datetime.now() + datetime.timedelta(
+            days=31)
 
-    if 'isInvaild' not in st.session_state:
-        st.session_state.isInvaild = False
+    if 'min_date' not in st.session_state:
+        st.session_state.min_date = datetime.date(1, 1, 1)
 
     def s_date_onchanged():
-
+        st.session_state.max_date = ""
         st.session_state.max_date = st.session_state.s_date + datetime.timedelta(
             days=31)
-        
-        st.session_state.max_date
-        # st.session_state.max_date
-        # if 'min_date' not in st.session_state:
-        #     st.session_state.min_date = st.session_state.s_date
-        # if st.session_state.max_date.year != s_date.year:
-        #     st.session_state.max_date = datetime.datetime.strptime(
-        #         str(datetime.datetime.now().year)+"/"+"12/31", "%Y/%m/%d")
-
-    # def e_date_onchanged():
-    #     if st.session_state.e_date < st.session_state.s_date:
-    #         st.session_state.isInvaild = True
-
-    # get_user = ["OUI", "KAI", "5", "Pattaya"]
-
+        if st.session_state.s_date.year != st.session_state.max_date.year:
+            st.session_state.max_date = datetime.datetime.strptime(
+                str(st.session_state.s_date.year)+"/"+"12/31", "%Y/%m/%d")
+            
     st.header("Net Sales Report")
     with st.container():
         container_header = st.columns(1)
         with container_header[0]:
-            # col_1, col_2 = st.columns([0.40, 0.60],gap='small')
             col_filter = st.columns([0.20, 0.20, 0.30, 0.30], gap='small')
 
             with col_filter[0]:
@@ -65,19 +52,17 @@ def main():
                 st.text_input("Store name", disabled=True)
             with col_filter[2]:
                 s_date = st.date_input(
-                    "Start Date", key='s_date', on_change=s_date_onchanged)
-                s_date
+                    "Start Date", min_value=st.session_state.min_date, key='s_date', on_change=s_date_onchanged)
             with col_filter[3]:
                 e_date = st.date_input(
-                    "End Date", key='e_date', max_value=st.session_state.max_date)
-                # if st.session_state.isInvaild:
-                #     st.write("End date greater than or equal to Start date.")
+                    "End Date", key='e_date', min_value=st.session_state.s_date, max_value=st.session_state.max_date, value=st.session_state.max_date)
+                
         col_btnS = st.columns(1)
         with col_btnS[0]:
             st.session_state.btn = st.button("Search")
 
     if st.session_state.btn:
-        showReport(s_date, e_date)
+        showReport(st.session_state.s_date, st.session_state.e_date)
 
 
 main()

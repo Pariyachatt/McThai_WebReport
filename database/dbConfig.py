@@ -1,5 +1,6 @@
 import snowflake.connector
 import streamlit as st
+import pandas as pd
 
 
 def connectDB(sql):
@@ -7,7 +8,7 @@ def connectDB(sql):
         user='wasan',
         password='Netflix28*',
         account='ad28777.southeast-asia.azure',
-        warehouses='mcthai_wh',
+        warehouses='MCTHAI_WH',
         database='mcthaidp',
         schema='mc1'
     )
@@ -15,6 +16,8 @@ def connectDB(sql):
     # st.write(cs)
     try:
         result = cs.execute(sql).fetch_pandas_all()
+        
+        
 
     finally:
         cs.close()
