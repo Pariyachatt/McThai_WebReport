@@ -34,16 +34,46 @@ def layout_showUser(user):
 
 
 def showReport(s_date, e_date):
-    col_btnExport = st.columns(1)
-    with col_btnExport[0]:
-        st.session_state.btnE = st.button("Export to Excel")
+    # col_btnExport = st.columns(1)
+    # with col_btnExport[0]:
+    #     # st.session_state.btnE = st.button("Export to Excel")
+    #     st.markdown("""
+    #                 <script>
+    #                     const getParams = () => ({
+    #                     processCellCallback(params) {
+    #                         const value = params.value;
+    #                         return value === undefined ? '' : `_${value}_`;
+    #                     },
+    #                     processRowGroupCallback(params) {
+    #                         const { node } = params;
+
+    #                         if (!node.footer) {
+    #                         return `row group: ${node.key}`;
+    #                         }
+    #                         const isRootLevel = node.level === -1;
+
+    #                         if (isRootLevel) {
+    #                         return 'Total';
+    #                         }
+    #                         return `Sub Total (${node.key})`;
+    #                     },
+    #                     });
+
+    #                     function onBtExport() {
+    #                         gridOptions.api.exportDataAsExcel(getParams());
+    #                     }
+    #                 </script>
+    #                 <button onclick="onBtExport()" style="margin: 5px 0px font-weight: bold">
+    #                     Export to Excel
+    #                 </button>""", unsafe_allow_html=True)
 
     yearCurr = str(s_date.year)
     yearOld = str(s_date.year-1)
 
-    # sql = f"select * from vw_net_sales_report where ""'Start Date'"" between '{s_date}' and '{e_date}'"
-    sql = "select * from vw_net_sales_report"
+    sql = "select * from vw_Net_Sales_Report where " + '"Date"' + \
+        " between "+f"'{s_date}'" + " and " + f"'{e_date}'"
     result = connectDB(sql)
+    # st.write(sql)
 
     columnDefs = [
         {"headerName": "",
@@ -55,9 +85,10 @@ def showReport(s_date, e_date):
                 {"headerName": "Day", "field": "Day",
                     "sortable": True},
                 {"headerName": "Profit name",
-                    "field": "Profit Name", "sortable": True},
-                {"headerName": "Patch name", "field": "Patch Name", "sortable": True},
-                {"headerName": "Store code", "field": "Store Code", "sortable": True}
+                    "field": "PROFIT_NAME", "sortable": True},
+                {"headerName": "Patch name", "field": "PATCH_NAME", "sortable": True},
+                {"headerName": "Store code", "field": "STORE_CODE", "sortable": True},
+                {"headerName": "Store name", "field": "STORE NAME", "sortable": True}
             ]
          },
         {"headerName": "31Q Plan",
@@ -67,27 +98,52 @@ def showReport(s_date, e_date):
                     "field": "Sales Target", "sortable": True, "aggFunc": 'sum'},
                 {"headerName": "Accum Sales",
                     "field": "Accum Sales", "sortable": True,
-                    "aggFunc": 'sum'},
+                    "valueGetter": JsCode("""function(params){
+                        if (!params.node.group) {
+                            var arr = [];
+                            params.data['CY Sales'].forEach(value => {
+                                console.logs("test2", value)
+                            });
+                            
+                            return "test";
+                        }
+                    }"""),
+                    "aggFunc": JsCode("""function(params) { 
+                            let totalSales = 0;
+                            let totalGC = 0;
+                                                
+                            params.values.forEach(value => {
+                                if (value && value['CY Sales']) {
+                                    totalSales += value['CY Sales'];
+                                }
+                                if (value && value['CY GC']) {
+                                    totalGC += value['CY GC'];
+                                }
+                            });
+                            
+                            let sum = 0;
+                            sum = totalSales / totalGC;               
+                            return parseFloat(sum).toFixed(2);
+                        }""")},
             ]
          },
         {"headerName": "Actual "+yearCurr,
             "children": [
-                {"headerName": "Sales", "field": "TY Sales",
+                {"headerName": "Sales", "field": "CY Sales",
                     "sortable": True, "aggFunc": 'sum'},
                 {"headerName": "Accu Sales",
-                    "field": "TY Accu Sales", "sortable": True, "aggFunc": 'sum'},
+                    "field": "CY Accu Sales", "sortable": True, "aggFunc": 'sum'},
                 {"headerName": "GC",
-                    "field": "TY GC", "sortable": True, "aggFunc": 'sum'},
-                {"headerName": "Accu GC", "field": "TY Accu GC",
+                    "field": "CY GC", "sortable": True, "aggFunc": 'sum'},
+                {"headerName": "Accu GC", "field": "CY Accu GC",
                     "sortable": True, "aggFunc": 'sum'},
-                {"headerName": "AC", "field": "TY AC", "sortable": True,
+                {"headerName": "AC", "field": "CY AC", "sortable": True,
                  "valueGetter": JsCode("""function(params){
-                     console.log('test',params.node);
                     if (!params.node.group) {
                         return {
-                            "TY Sales":params.data['TY Sales'],
-                            "TY GC":params.data['TY GC'],
-                            toString: () => params.data['TY AC']
+                            "CY Sales":params.data['CY Sales'],
+                            "CY GC":params.data['CY GC'],
+                            toString: () => params.data['CY AC']
                         };
                     }
                     }"""),
@@ -96,11 +152,11 @@ def showReport(s_date, e_date):
                         let totalGC = 0;
                                             
                         params.values.forEach(value => {
-                            if (value && value['TY Sales']) {
-                                totalSales += value['TY Sales'];
+                            if (value && value['CY Sales']) {
+                                totalSales += value['CY Sales'];
                             }
-                            if (value && value['TY GC']) {
-                                totalGC += value['TY GC'];
+                            if (value && value['CY GC']) {
+                                totalGC += value['CY GC'];
                             }
                         });
                         
@@ -154,13 +210,16 @@ def showReport(s_date, e_date):
         {"headerName": "% Comp. MTD",
             "children": [
                 {"headerName": "Sales",
-                    "field": "CompMTDSales", "sortable": True,
+                    "field": "% Comp. Sales", "sortable": True,
+                    "cellClassRules": {
+                        'cell-span': "value < 0",
+                    },
                  "valueGetter": JsCode("""function(params){
                     if (!params.node.group) {
                         return {
-                            "TY Accu Sales":params.data['TY Accu Sales'],
+                            "CY Accu Sales":params.data['CY Accu Sales'],
                             "LY Accu Sales":params.data['LY Accu Sales'],
-                            toString: () => params.data['CompMTDSales']
+                            toString: () => params.data['% Comp. Sales']
                         };
                     }
                     }"""),
@@ -169,8 +228,8 @@ def showReport(s_date, e_date):
                         let totalAccOld = 0;
                                             
                         params.values.forEach(value => {
-                            if (value && value['TY Accu Sales']) {
-                                totalAccCurr += value['TY Accu Sales'];
+                            if (value && value['CY Accu Sales']) {
+                                totalAccCurr += value['CY Accu Sales'];
                             }
                             if (value && value['LY Accu Sales']) {
                                 totalAccOld += value['LY Accu Sales'];
@@ -183,13 +242,16 @@ def showReport(s_date, e_date):
                     }""")
                  },
                 {"headerName": "GC",
-                    "field": "CompMTDGC", "sortable": True,
+                    "field": "% Comp. GC", "sortable": True,
+                    "cellClassRules": {
+                        'cell-span': "value < 0",
+                    },
                  "valueGetter": JsCode("""function(params){
                     if (!params.node.group) {
                         return {
-                            "TY GC":params.data['TY GC'],
+                            "CY GC":params.data['CY GC'],
                             "LY GC":params.data['LY GC'],
-                            toString: () => params.data['CompMTDGC']
+                            toString: () => params.data['% Comp. GC']
                         };
                     }
                     }"""),
@@ -198,8 +260,8 @@ def showReport(s_date, e_date):
                         let totalGCAccOld = 0;
                                             
                         params.values.forEach(value => {
-                            if (value && value['TY GC']) {
-                                totalGCCurr += value['TY GC'];
+                            if (value && value['CY GC']) {
+                                totalGCCurr += value['CY GC'];
                             }
                             if (value && value['LY GC']) {
                                 totalGCAccOld += value['LY GC'];
@@ -215,13 +277,16 @@ def showReport(s_date, e_date):
          },
         {"headerName": "% Achiev",
             "children": [
-                {"headerName": "Sales", "field": "% Achiev Sales", "sortable": True,
+                {"headerName": "Sales", "field": "%Achieve Sales", "sortable": True,
+                 "cellClassRules": {
+                     'cell-span': "value < 0",
+                 },
                  "valueGetter": JsCode("""function(params){
                     if (!params.node.group) {
                         return {
                             "Accum Sales":params.data['Accum Sales'],
                             "LY Accu Sales":params.data['LY Accu Sales'],
-                            toString: () => params.data['% Achiev Sales']
+                            toString: () => params.data['%Achieve Sales']
                         };
                     }
                     }"""),
@@ -250,7 +315,17 @@ def showReport(s_date, e_date):
     options = {"columnDefs": columnDefs,
                "groupIncludeTotalFooter": True,
                "groupIncludeFooter": True,
-               "api": "exportDataAsExcel()"
+               "paginationPageSize": 50,
+               "pagination": True,
+               "defaultExcelExportParams": JsCode("""
+                                                    funtion (params) {
+                                                        const isRootLevel = params.node.level == -1;
+                                                        console.log('test',params.node);
+
+                                                        if (isRootLevel) {
+                                                            return 'Total Sales';
+                                                        }
+                                                  """)
                }
 
     css = {
@@ -266,6 +341,9 @@ def showReport(s_date, e_date):
         },
         ".ag-header-cell-label, .ag-header-group-cell-label": {
             "justify-content": "center"
+        },
+        ".cell-span": {
+            "color": "red"
         }
     }
 
