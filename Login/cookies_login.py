@@ -6,7 +6,37 @@ from tzlocal import get_localzone # pip install tzlocal
 
 #pip install streamlit_cookies_manager
 
+def gobalCookies():
+    cookies = EncryptedCookieManager(
+        prefix="localhost/",
+        password='changeme'
+    )
+    return cookies
+
+def cookiesRemaining():
+    gobal_cookies =  gobalCookies()
+    cookies_expiry_info = dict()
+    if gobal_cookies["time_cookies_start"]:
+        # 2023-02-21 14:01:44.161458
+        time_cookies_alive = int(gobal_cookies["time_cookies_alive"])
+        str_timestamp = gobal_cookies["time_cookies_start"]
+        date_format_str = '%Y-%m-%d %H:%M:%S.%f'
+        datetime_start = datetime.strptime(str_timestamp, date_format_str)
+        datetime_end = datetime_start + timedelta(hours=time_cookies_alive)
+
+        cookies_remaining = (datetime_end - datetime.now()).total_seconds() / 60
+        cookies_quota = (datetime_end - datetime_start).total_seconds() / 60 #minutes_diff
+
+        # st.write("Welcome: ", cookies["username"])
+        # st.write("cookies_remaininga: ", cookies_remaining)
+        # st.write("cookies_quota: ", cookies_quota)
+        cookies_expiry_info['cookies_remaininga'] = cookies_remaining
+        cookies_expiry_info['cookies_quota'] = cookies_quota
+    return cookies_expiry_info
+
+
 def FuncLogin():
+    cookies =  gobalCookies()
     st.set_page_config(initial_sidebar_state="collapsed")
 
     with open('./css/style.css') as f:
@@ -34,21 +64,9 @@ def FuncLogin():
         unsafe_allow_html=True,
     )
 
-    # This should be on top of your script
-    cookies = EncryptedCookieManager(
-        # This prefix will get added to all your cookie names.
-        # This way you can run your app on Streamlit Cloud without cookie name clashes with other apps.
-        prefix="localhost/",
-        #prefix="",   # no prefix will show all your cookies for this domain
-        # You should setup COOKIES_PASSWORD secret if you're running on Streamlit Cloud.
-        #password=os.environ.get("COOKIES_PASSWORD", "My secret password"),
-        password='changeme'
-    )
-
     if not cookies.ready():
         # Wait for the component to load and send us current cookies.
         st.stop()
-
 
     if 'cookies_set' not in cookies.keys():
         cookies["cookies_set"] = "True"
@@ -57,28 +75,20 @@ def FuncLogin():
         cookies["time_cookies_start"] = ""
         cookies.save()
 
-    # if int(cookies["time_cookies_alive"]) == 0:
-    #     username = st.text_input("Username", cookies["username"])
-    #     Password = st.text_input("Password")
-    #     if st.button("Login"):
-    #         cookies["username"] = username  # This will get saved on next rerun
-    #         cookies["time_cookies_alive"] = "2"  # Hours
-    #         cookies["time_cookies_start"] = str(datetime.now())  # This will get saved on next rerun
-    # else:
-    #     if st.button("Logout"):
-    #         cookies["time_cookies_alive"] = "0"
-    #         st.refresh()
 
     if cookies["time_cookies_start"]:
         # 2023-02-21 14:01:44.161458
-        time_cookies_alive = int(cookies["time_cookies_alive"])
-        str_timestamp = cookies["time_cookies_start"]
-        date_format_str = '%Y-%m-%d %H:%M:%S.%f'
-        datetime_start = datetime.strptime(str_timestamp, date_format_str)
-        datetime_end = datetime_start + timedelta(hours=time_cookies_alive)
+        # time_cookies_alive = int(cookies["time_cookies_alive"])
+        # str_timestamp = cookies["time_cookies_start"]
+        # date_format_str = '%Y-%m-%d %H:%M:%S.%f'
+        # datetime_start = datetime.strptime(str_timestamp, date_format_str)
+        # datetime_end = datetime_start + timedelta(hours=time_cookies_alive)
+        #
+        # cookies_remaining = (datetime_end - datetime.now()).total_seconds() / 60
+        # cookies_quota = (datetime_end - datetime_start).total_seconds() / 60 #minutes_diff
 
-        cookies_remaining = (datetime_end - datetime.now()).total_seconds() / 60
-        cookies_quota = (datetime_end - datetime_start).total_seconds() / 60 #minutes_diff
+        cookies_remaining = cookies_expiry_info['cookies_remaininga']
+        cookies_quota = cookies_expiry_info['cookies_quota']
 
         st.write("Welcome: ", cookies["username"])
         st.write("cookies_remaininga: ", cookies_remaining)
@@ -103,6 +113,8 @@ def FuncLogin():
 
     # return cookies
 
+
+
 def statusCookies():
     cookies = EncryptedCookieManager(
         prefix="localhost/",
@@ -111,7 +123,7 @@ def statusCookies():
     cookies_chk = FuncLogin()
 
     cookies_remaining = (datetime_end - datetime.now()).total_seconds() / 60
-    if int(cookies_remaining) <= 0: or int(cookies_chk["time_cookies_alive"]) == 0:
+    if int(cookies_remaining) <= 0: || int(cookies_chk["time_cookies_alive"]) = 0:
         return True
     else:
         return False
