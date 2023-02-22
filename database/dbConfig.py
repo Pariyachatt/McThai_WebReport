@@ -16,9 +16,6 @@ def connectDB(sql):
     # st.write(cs)
     try:
         result = cs.execute(sql).fetch_pandas_all()
-
-
-
     finally:
         cs.close()
     ctx.close()

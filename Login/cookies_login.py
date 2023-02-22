@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 from tzlocal import get_localzone # pip install tzlocal
 #pip install streamlit_cookies_manager
 
+# from database.db_snowflake import *
+from Login.snf_connect import *
+
 cookies = EncryptedCookieManager(
     prefix="localhost/",
     password='changeme'
@@ -89,9 +92,14 @@ def funcLogin():
         email = st.text_input("Email", cookies["username"])
         password = st.text_input("Password", type="password")
         if st.form_submit_button("LOG IN", on_click=OnLogin):
+            rows = profitAlive(email)
+            for row in rows:
+                st.write("SNOWFLAKE===", f"{row[0]} has a :{row[1]}:")
+            # profit = profitAlive(email)
+            # st.write("----Check user login: ", type(profit))
             cookies["username"] = email  # This will get saved on next rerun
-            cookies["time_cookies_alive"] = "2"  # Hours
-            cookies["time_cookies_start"] = str(datetime.now())
+            # cookies["time_cookies_alive"] = "2"  #s Hours
+            # cookies["time_cookies_start"] = str(datetime.now())
 
 def statusCookies():
     ckr_list = cookiesRemaining()

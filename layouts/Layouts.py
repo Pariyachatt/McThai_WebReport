@@ -11,7 +11,7 @@ with open('./css/style.css') as f:
 def layout_showUser(user):
     st.markdown("""
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>            
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     """, unsafe_allow_html=True)
     return f"""
             <div class="row align-items-center text-secondary">
@@ -79,7 +79,7 @@ def showReport(s_date, e_date):
         {"headerName": "",
             "children": [
                 {"headerName": "Date", "field": "Date",
-                    "sortable": True, "aggFunc": JsCode("""function(params) { 
+                    "sortable": True, "aggFunc": JsCode("""function(params) {
                         return "Total Sales";
                     }""")},
                 {"headerName": "Day", "field": "Day",
@@ -104,14 +104,14 @@ def showReport(s_date, e_date):
                             params.data['CY Sales'].forEach(value => {
                                 console.logs("test2", value)
                             });
-                            
+
                             return "test";
                         }
                     }"""),
-                    "aggFunc": JsCode("""function(params) { 
+                    "aggFunc": JsCode("""function(params) {
                             let totalSales = 0;
                             let totalGC = 0;
-                                                
+
                             params.values.forEach(value => {
                                 if (value && value['CY Sales']) {
                                     totalSales += value['CY Sales'];
@@ -120,9 +120,9 @@ def showReport(s_date, e_date):
                                     totalGC += value['CY GC'];
                                 }
                             });
-                            
+
                             let sum = 0;
-                            sum = totalSales / totalGC;               
+                            sum = totalSales / totalGC;
                             return parseFloat(sum).toFixed(2);
                         }""")},
             ]
@@ -147,10 +147,10 @@ def showReport(s_date, e_date):
                         };
                     }
                     }"""),
-                 "aggFunc": JsCode("""function(params) { 
+                 "aggFunc": JsCode("""function(params) {
                         let totalSales = 0;
                         let totalGC = 0;
-                                            
+
                         params.values.forEach(value => {
                             if (value && value['CY Sales']) {
                                 totalSales += value['CY Sales'];
@@ -159,9 +159,9 @@ def showReport(s_date, e_date):
                                 totalGC += value['CY GC'];
                             }
                         });
-                        
+
                         let sum = 0;
-                        sum = totalSales / totalGC;               
+                        sum = totalSales / totalGC;
                         return parseFloat(sum).toFixed(2);
                     }""")
                  }
@@ -187,10 +187,10 @@ def showReport(s_date, e_date):
                         };
                     }
                     }"""),
-                 "aggFunc": JsCode("""function(params) { 
+                 "aggFunc": JsCode("""function(params) {
                         let totalSales = 0;
                         let totalGC = 0;
-                                            
+
                         params.values.forEach(value => {
                             if (value && value['LY Sales']) {
                                 totalSales += value['LY Sales'];
@@ -199,9 +199,9 @@ def showReport(s_date, e_date):
                                 totalGC += value['LY GC'];
                             }
                         });
-                        
+
                         let sum = 0;
-                        sum = totalSales / totalGC;               
+                        sum = totalSales / totalGC;
                         return parseFloat(sum).toFixed(2);
                     }""")
                  }
@@ -223,10 +223,10 @@ def showReport(s_date, e_date):
                         };
                     }
                     }"""),
-                 "aggFunc": JsCode("""function(params) { 
+                 "aggFunc": JsCode("""function(params) {
                         let totalAccCurr = 0;
                         let totalAccOld = 0;
-                                            
+
                         params.values.forEach(value => {
                             if (value && value['CY Accu Sales']) {
                                 totalAccCurr += value['CY Accu Sales'];
@@ -235,9 +235,9 @@ def showReport(s_date, e_date):
                                 totalAccOld += value['LY Accu Sales'];
                             }
                         });
-                        
+
                         let sum = 0;
-                        sum = (totalAccOld-totalAccCurr)/totalAccCurr;               
+                        sum = (totalAccOld-totalAccCurr)/totalAccCurr;
                         return sum.toLocaleString(undefined,{style: 'percent'}); ;
                     }""")
                  },
@@ -255,10 +255,10 @@ def showReport(s_date, e_date):
                         };
                     }
                     }"""),
-                 "aggFunc": JsCode("""function(params) { 
+                 "aggFunc": JsCode("""function(params) {
                         let totalGCCurr = 0;
                         let totalGCAccOld = 0;
-                                            
+
                         params.values.forEach(value => {
                             if (value && value['CY GC']) {
                                 totalGCCurr += value['CY GC'];
@@ -267,9 +267,9 @@ def showReport(s_date, e_date):
                                 totalGCAccOld += value['LY GC'];
                             }
                         });
-                        
+
                         let sum = 0;
-                        sum = (totalGCAccOld-totalGCCurr)/totalGCCurr;               
+                        sum = (totalGCAccOld-totalGCCurr)/totalGCCurr;
                         return sum.toLocaleString(undefined,{style: 'percent'}); ;
                     }""")
                  }
@@ -290,10 +290,10 @@ def showReport(s_date, e_date):
                         };
                     }
                     }"""),
-                 "aggFunc": JsCode("""function(params) { 
+                 "aggFunc": JsCode("""function(params) {
                         let totalAcc = 0;
                         let totalAccum = 0;
-                                            
+
                         params.values.forEach(value => {
                             if (value && value['Accum Sales']) {
                                 totalAccum += value['Accum Sales'];
@@ -302,9 +302,9 @@ def showReport(s_date, e_date):
                                 totalAcc+= value['LY Accu Sales'];
                             }
                         });
-                        
+
                         let sum = 0;
-                        sum = totalAcc/totalAccum;               
+                        sum = totalAcc/totalAccum;
                         return sum.toLocaleString(undefined,{style: 'percent'}); ;
                     }""")
                  }
