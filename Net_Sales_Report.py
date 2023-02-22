@@ -70,4 +70,6 @@ else:
                 st.session_state.btn = st.button("Search")
         if st.session_state.btn:
             showReport(st.session_state.s_date, st.session_state.e_date)
+
+if __name__ == "__main__":
     main()

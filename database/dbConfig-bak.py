@@ -7,7 +7,7 @@ def connectDB(sql):
     ctx = snowflake.connector.connect(
         user='wasan',
         password='Netflix28*',
-        account='na61469.southeast-asia.azure',
+        account='ad28777.southeast-asia.azure',
         warehouses='MCTHAI_WH',
         database='mcthaidp',
         schema='mc1'
