@@ -94,7 +94,18 @@ def funcLogin():
         if st.form_submit_button("LOG IN", on_click=OnLogin):
             rows = profitAlive(email)
             for row in rows:
-                st.write("SNOWFLAKE===", f"{row[0]} has a :{row[1]}:")
+                res_username = row[0]
+                res_email = row[1]
+                st.write("user_alive === ", res_username +" : "+ res_email)
+                # st.write("pass sha256: ", sha256Auth("1234"))
+                # st.write("pass sha256: ", sha256Auth("1111"))
+
+                # test add new password
+                addUserAuth(email, password)
+                # st.write("pass sha256: ", addUserAuth(email, password))
+
+
+
             # profit = profitAlive(email)
             # st.write("----Check user login: ", type(profit))
             cookies["username"] = email  # This will get saved on next rerun

@@ -121,4 +121,4 @@ def statusCookies():
 
 
 
-st.write("cookies_quota: ", cookies2["time_cookies_alive"])
+st.write("cookies_quota: ", cookies["time_cookies_alive"])
