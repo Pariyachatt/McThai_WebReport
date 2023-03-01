@@ -10,9 +10,10 @@ from PIL import Image
 # Auth =  False
 # Auth =  True
 # if Auth:
-if statusCookies():
+if statusCookies() and signStatus():
     funcLogin()
-    # st.write("xxxxxxxxxxxxxxx")
+elif signStatus() == False:
+    st.write("Go to page sign up.....")
 else:
     def main():
         st.set_page_config(
