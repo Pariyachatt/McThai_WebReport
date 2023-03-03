@@ -46,12 +46,18 @@ class PassAuth:
             WHERE USER_MAIL='"""+self.mailAuth+"""';
         """
         if run_query(sql):
-            return 1
+            return True
         else:
-            return 0
+            return False
 
     # def changePwAuth(mailAuth, passAuth):
     #     return 1
+
+# class ClName():
+#     def __init__(self, mail):
+#         self.arg = mail
+#     def get2(self):
+#         return "yes22"
 
 
 # authentication step 2: check mail user
@@ -69,7 +75,7 @@ class PermistionAuth:
             resQuery = run_query(sql)
             if resQuery:
                 # st.write("Found: ", sql)
-                return resQuery
+                return resQuery[0][0]
             # st.write("Next: ", sql)
 
 

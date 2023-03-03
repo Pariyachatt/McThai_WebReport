@@ -3,10 +3,13 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
 
-from Net_Sales_Report import *
-from welcome import *
-from function.logins.cookies_login import *
-from function.logins.verified_signup import *
+from frontend.net_sales_report import *
+# from backend.cookies_login import *
+from backend.logins.cookies_login import *
+
+# from verified_signup import *
+# from backend.verified_signup import *
+from backend.logins.verified_signup import *
 
 # Pages logic
 if 'page' not in st.session_state: st.session_state.page = 0
@@ -51,7 +54,13 @@ if not st.session_state.page:
             actionConfirm = st.button("Confirm")
         with st.expander("SIGN UP"):
             components.html("""<hr>""",height=30)
-            suEmail = st.text_input("Your Email")
+
+            # email exist
+            # suEmail = st.text_input("Your Email",'Borompong.Phairatphiboon@th.mcd.com')
+
+            # not Found
+            suEmail = st.text_input("Your Email",'Krisana.Charoensirinukul@th.mcd.com')
+
             suPass = st.text_input("Enter Password", type="password")
             suConfPass = st.text_input("Enter Confirm Password", type="password")
             actionLogin = st.button("SIGN UP")

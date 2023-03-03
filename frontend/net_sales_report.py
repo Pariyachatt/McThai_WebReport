@@ -1,6 +1,7 @@
 import streamlit as st
 from database.dbConfig import *
-from layouts.Layouts import *
+# from database.snf_auth_connect import *
+from frontend.layouts import *
 # from Login.cookies_login import *
 # from Login.signup import *
 import datetime
