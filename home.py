@@ -10,10 +10,12 @@ from backend.logins.cookies_login import *
 # from verified_signup import *
 # from backend.verified_signup import *
 from backend.logins.verified_signup import *
+from backend.logins.verified_signin import *
 
 # Pages logic
 if 'page' not in st.session_state: st.session_state.page = 0
 if 'page_detail' not in st.session_state: st.session_state.page_detail = "none"
+
 
 def login_bnt():
     st.session_state.page = True
@@ -21,8 +23,9 @@ def logout_bnt():
     st.session_state.page = False
     st.session_state.page_detail = "none"
 
-CLogin = CookiesLogin()
-c_remaining =  CLogin.cookiesRemaining()['cookies_remaining']
+
+CkLogin = CookiesLogin()
+c_remaining =  CkLogin.cookiesRemaining()['cookies_remaining']
 if c_remaining < 0:
     st.session_state.page = False
 else:
@@ -33,6 +36,7 @@ st.write("st.session_state.page: ", st.session_state.page)
 
 ph = st.empty()
 # Action login
+
 
 # optional
 # def ck_callback():
@@ -54,11 +58,16 @@ if not st.session_state.page:
         # if 'input2' in st.session_state:
         #     st.write("You searched for2:", st.session_state.input2)
 
-
         actionLogin = st.button("LOG IN")
         if actionLogin:
-            CLogin.updateTimeCookiesAlive()
+            # pass
+            # VerifiedSignIn = VerifiedSignIn(email, password)
+            # VerifiedSignIn.emptyUserPass()
+
+            CkLogin.updateTimeCookiesAlive()
             login_bnt()
+
+
 
         with st.expander("FORGET PASSWORD"):
             components.html("""<hr>""",height=30)
@@ -96,7 +105,7 @@ elif st.session_state.page:
             icons=['house'], menu_icon="cast", default_index=0)
         selected
         if selected == 'Logout':
-            CLogin.destroyTimeCookiesAlive()
+            CkLogin.destroyTimeCookiesAlive()
             logout_bnt()
         if selected == 'Net Sales Report':
             # st.session_state.page_detail = 'welcome'
