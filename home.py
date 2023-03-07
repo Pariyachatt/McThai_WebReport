@@ -33,6 +33,14 @@ st.write("st.session_state.page: ", st.session_state.page)
 
 ph = st.empty()
 # Action login
+
+# optional
+# def ck_callback():
+#     st.write("You searched for:", st.session_state.input)
+#     # return st.session_state.input
+#     if st.session_state.input == "111":
+#         st.session_state.input2 = "2022"
+
 if not st.session_state.page:
     with ph.container():
         # st.header("This is page 1")
@@ -40,6 +48,13 @@ if not st.session_state.page:
         st.title('User Authentication.')
         email = st.text_input("Email",'suwit@ssci.co.th')
         password = st.text_input("Password", type="password")
+
+        # optional
+        # st.text_input("Test widget", placeholder='Life of Brian', key='input', on_change=ck_callback)
+        # if 'input2' in st.session_state:
+        #     st.write("You searched for2:", st.session_state.input2)
+
+
         actionLogin = st.button("LOG IN")
         if actionLogin:
             CLogin.updateTimeCookiesAlive()
@@ -59,14 +74,17 @@ if not st.session_state.page:
             # suEmail = st.text_input("Your Email",'Borompong.Phairatphiboon@th.mcd.com')
 
             # not Found
-            suEmail = st.text_input("Your Email",'Krisana.Charoensirinukul@th.mcd.com')
+            # suEmail = st.text_input("Your Email",'Krisana.Charoensirinukul@th.mcd.com',placeholder='mail@domain.com')
+            suEmail = st.text_input("Your Email",'Borompong.Phairatphiboon@th.mcd.com',placeholder='mail@domain.com')
 
-            suPass = st.text_input("Enter Password", type="password")
-            suConfPass = st.text_input("Enter Confirm Password", type="password")
+            suPass = st.text_input("Enter Password",'11111111', type="password", placeholder='Password more then 7 digit')
+            suConfPass = st.text_input("Enter Confirm Password",'11111111', type="password",placeholder='Password more then 7 digit')
+            suHint = st.text_input("Enter Hint",'1111', max_chars=4, placeholder='abcd')
+
             actionLogin = st.button("SIGN UP")
 
             if actionLogin:
-                VerSignup = VerifiedSignUp(suEmail,suPass,suConfPass)
+                VerSignup = VerifiedSignUp(suEmail,suPass,suConfPass,suHint)
                 VerSignup.actionVerify()
 
 # show menu left
