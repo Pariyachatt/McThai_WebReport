@@ -39,5 +39,7 @@ class VerifiedSignIn():
         try:
             self.status.index(False)
             # st.write("Stop action!")
+            return False
         except Exception as e:
             st.success('Login successful!', icon="✅")
+            return True

@@ -72,5 +72,29 @@ class PassAuth:
         """
         if debug:
             st.write("SQL checkSignUp: ",sql)
-
         return self.DBSnowflake.run_insert(sql)
+
+
+    # Change PASSWORD
+    def verifyOldPassowd(self, oldpass, debug=False):
+        # def __init__(self, mailAuth, oldpass):
+        _passAuth = self.sha256Auth()
+        sql = """
+            SELECT USER_MAIL FROM """+self.DB_USER_AUTH+"""
+            WHERE USER_MAIL='"""+self.mailAuth+"""' and PASSWORD='"""+_passAuth+"""';
+        """
+        if debug:
+            st.write("SQL verifyOldPassowd: ",sql)
+        if self.DBSnowflake.run_query(sql):
+            return True
+        else:
+            return False
+
+    # def changePassword(self, fhint, debug=False):
+    #     _passAuth = self.sha256Auth()
+    #     sql = """
+    #         UPDATE """+self.DB_USER_AUTH+""" SET PASSWORD='"""+_passAuth+"""' WHERE hint='"""+fhint+"""' AND USER_MAIL='"""+self.mailAuth+"""';
+    #     """
+    #     if debug:
+    #         st.write("SQL checkSignUp: ",sql)
+    #     return self.DBSnowflake.run_insert(sql)

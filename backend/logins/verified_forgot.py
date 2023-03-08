@@ -1,13 +1,5 @@
 import streamlit as st
 from database.snf_auth_connect import *
-from database.permistion_auth import *
-
-
-# class ClName2():
-#     def __init__(self, mail):
-#         self.arg = mail
-#     def get2(self):
-#         return "yes"
 
 class VerifiedForgot():
     def __init__(self, fuser, fhint, fnpass, fcpass):
