@@ -52,12 +52,3 @@ class PassAuth:
             return True
         else:
             return False
-
-    # def changePwAuth(mailAuth, passAuth):
-    #     return 1
-
-# class ClName():
-#     def __init__(self, mail):
-#         self.arg = mail
-#     def get2(self):
-#         return "yes22"

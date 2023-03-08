@@ -22,7 +22,7 @@ class VerifiedSignUp():
     def matchPassword(self):
         status = False
         if self.newpass != self.confpass:
-            self.message = "Password is mismatch!"
+            self.message = "Password and Confirm Password dose not match."
             st.error(self.message, icon="🚨")
         else:
             status = True
@@ -32,10 +32,10 @@ class VerifiedSignUp():
     def digitPassword(self):
         status = False
         if len(self.newpass) <= 7:
-            self.message = "Please new password must more then 7 digit."
+            self.message = "Please try between 'New password'  8 and 15 digit."
             st.error(self.message, icon="🚨")
         elif len(self.confpass) <= 7:
-            self.message = "Please confirm password more then 8 digit."
+            self.message = "Please try between 'Confirm password' 8 and 15 digit."
             st.error(self.message, icon="🚨")
         else:
             status = True
@@ -47,7 +47,7 @@ class VerifiedSignUp():
         # if PAuth.checkSignUp(True):
             # self.status.append(PAuth.checkSignUp())
             self.status.append(False)
-            self.message = "Your Email sign up aleady!"
+            self.message = "An account with Email already exists."
             st.warning(self.message, icon="⚠️")
         else:
             self.status.append(True)
@@ -76,11 +76,12 @@ class VerifiedSignUp():
         self.status.append(status)
 
     def actionVerify(self):
-        self.matchPassword()
-        self.digitPassword()
-        self.checkEmailSignUp()
-        self.digitHint()
-        self.checkPermistionAuth()
+        with st.spinner('Verifying...'):
+            self.matchPassword()
+            self.digitPassword()
+            self.checkEmailSignUp()
+            self.digitHint()
+            self.checkPermistionAuth()
 
         try:
             self.status.index(False)

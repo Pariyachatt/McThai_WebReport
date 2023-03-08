@@ -50,7 +50,7 @@ if not st.session_state.page:
         # st.header("This is page 1")
         # st.button("Go to page 2",on_click=nextPage)
         st.title('User Authentication.')
-        email = st.text_input("Email",'suwit@ssci.co.th')
+        email = st.text_input("Email",'Borompong.Phairatphiboon@th.mcd.com')
         password = st.text_input("Password", type="password")
 
         # optional
@@ -60,21 +60,20 @@ if not st.session_state.page:
 
         actionLogin = st.button("LOG IN")
         if actionLogin:
-            # pass
-            # VerifiedSignIn = VerifiedSignIn(email, password)
-            # VerifiedSignIn.emptyUserPass()
+            VerifiedSignIn = VerifiedSignIn(email, password)
+            VerifiedSignIn.actionVerify()
 
-            CkLogin.updateTimeCookiesAlive()
-            login_bnt()
+            # CkLogin.updateTimeCookiesAlive()
+            # login_bnt()
 
 
 
         with st.expander("FORGET PASSWORD"):
             components.html("""<hr>""",height=30)
             confEmail = st.text_input("Confirm Email")
-            oldPass = st.text_input("Old Password", type="password")
-            newPass = st.text_input("New Password", type="password")
-            ConfPass = st.text_input("Confirm Password", type="password")
+            oldPass = st.text_input("Old Password", type="password", max_chars=15)
+            newPass = st.text_input("New Password", type="password", max_chars=15)
+            ConfPass = st.text_input("Confirm Password", type="password", max_chars=15)
             actionConfirm = st.button("Confirm")
         with st.expander("SIGN UP"):
             components.html("""<hr>""",height=30)
@@ -86,8 +85,8 @@ if not st.session_state.page:
             # suEmail = st.text_input("Your Email",'Krisana.Charoensirinukul@th.mcd.com',placeholder='mail@domain.com')
             suEmail = st.text_input("Your Email",'Borompong.Phairatphiboon@th.mcd.com',placeholder='mail@domain.com')
 
-            suPass = st.text_input("Enter Password",'11111111', type="password", placeholder='Password more then 7 digit')
-            suConfPass = st.text_input("Enter Confirm Password",'11111111', type="password",placeholder='Password more then 7 digit')
+            suPass = st.text_input("Enter Password",'11111111', type="password", placeholder='Insert 8 and 15 digit.', max_chars=15)
+            suConfPass = st.text_input("Enter Confirm Password",'11111111', type="password",placeholder='Insert 8 and 15 digit', max_chars=15)
             suHint = st.text_input("Enter Hint",'1111', max_chars=4, placeholder='abcd')
 
             actionLogin = st.button("SIGN UP")
