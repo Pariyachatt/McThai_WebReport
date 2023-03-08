@@ -32,7 +32,7 @@ class VerifiedSignUp():
     def digitPassword(self):
         status = False
         if len(self.newpass) <= 7:
-            self.message = "Please try between 'New password'  8 and 15 digit."
+            self.message = "Please try between 'New password' 8 and 15 digit."
             st.error(self.message, icon="🚨")
         elif len(self.confpass) <= 7:
             self.message = "Please try between 'Confirm password' 8 and 15 digit."
@@ -71,6 +71,9 @@ class VerifiedSignUp():
         if len(self.hint) < 4:
             self.message = "Hint must equal 4 digit."
             st.error(self.message, icon="🚨")
+        elif self.hint.isnumeric() == False:
+            self.message = "Insert with Hint number only."
+            st.error(self.message, icon="🚨")
         else:
             status = True
         self.status.append(status)
@@ -89,6 +92,8 @@ class VerifiedSignUp():
         except Exception as e:
             PAuth = PassAuth(self.user, self.newpass)
             _resAddUser = PAuth.addUserAuth(self.hint)
+            # st.write("_resAddUser: ", _resAddUser)
+            # python sql return done
             if _resAddUser == 'done':
                 st.success('Save successful!', icon="✅")
             else:

@@ -52,3 +52,25 @@ class PassAuth:
             return True
         else:
             return False
+
+    def verifyUserHint(self, hint, debug=False):
+        sql = """
+            SELECT USER_MAIL FROM """+self.DB_USER_AUTH+"""
+            WHERE USER_MAIL='"""+self.mailAuth+"""' and HINT='"""+hint+"""';
+        """
+        if debug:
+            st.write("SQL checkSignUp: ",sql)
+        if self.DBSnowflake.run_query(sql):
+            return True
+        else:
+            return False
+
+    def resetPassword(self, fhint, debug=False):
+        _passAuth = self.sha256Auth()
+        sql = """
+            UPDATE """+self.DB_USER_AUTH+""" SET PASSWORD='"""+_passAuth+"""' WHERE hint='"""+fhint+"""' AND USER_MAIL='"""+self.mailAuth+"""';
+        """
+        if debug:
+            st.write("SQL checkSignUp: ",sql)
+
+        return self.DBSnowflake.run_insert(sql)

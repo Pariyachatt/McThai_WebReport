@@ -1,16 +1,11 @@
 import streamlit as st
-# from streamlit_cookies_manager import EncryptedCookieManager
 from streamlit_option_menu import option_menu
 import streamlit.components.v1 as components
-
 from frontend.net_sales_report import *
-# from backend.cookies_login import *
 from backend.logins.cookies_login import *
-
-# from verified_signup import *
-# from backend.verified_signup import *
 from backend.logins.verified_signup import *
 from backend.logins.verified_signin import *
+from backend.logins.verified_forgot import *
 
 # Pages logic
 if 'page' not in st.session_state: st.session_state.page = 0
@@ -62,19 +57,21 @@ if not st.session_state.page:
         if actionLogin:
             VerifiedSignIn = VerifiedSignIn(email, password)
             VerifiedSignIn.actionVerify()
-
             # CkLogin.updateTimeCookiesAlive()
             # login_bnt()
 
-
-
-        with st.expander("FORGET PASSWORD"):
+        with st.expander("FORGOT PASSWORD"):
             components.html("""<hr>""",height=30)
-            confEmail = st.text_input("Confirm Email")
-            oldPass = st.text_input("Old Password", type="password", max_chars=15)
-            newPass = st.text_input("New Password", type="password", max_chars=15)
-            ConfPass = st.text_input("Confirm Password", type="password", max_chars=15)
+            fgEmail = st.text_input("Email", placeholder='name@web.com')
+            fgHint = st.text_input("Enter Hint",'1111', max_chars=4, placeholder='Insert 4-digit.')
+            fgNewPass = st.text_input("New Password", type="password", max_chars=15)
+            fgConfPass = st.text_input("Confirm Password", type="password", max_chars=15)
+
             actionConfirm = st.button("Confirm")
+            if actionConfirm:
+                VerifiedForgot = VerifiedForgot(fgEmail, fgHint, fgNewPass, fgConfPass)
+                VerifiedForgot.actionVerify()
+
         with st.expander("SIGN UP"):
             components.html("""<hr>""",height=30)
 
@@ -87,7 +84,11 @@ if not st.session_state.page:
 
             suPass = st.text_input("Enter Password",'11111111', type="password", placeholder='Insert 8 and 15 digit.', max_chars=15)
             suConfPass = st.text_input("Enter Confirm Password",'11111111', type="password",placeholder='Insert 8 and 15 digit', max_chars=15)
-            suHint = st.text_input("Enter Hint",'1111', max_chars=4, placeholder='abcd')
+            # suHint = st.number_input("Enter Hint", value=1111, disabled=True )
+            suHint = st.text_input("Enter Hint", value=1111, max_chars=4)
+            # if suHint.isalpha():
+            #     st.error("Plase insert number only!", icon="🚨")
+
 
             actionLogin = st.button("SIGN UP")
 

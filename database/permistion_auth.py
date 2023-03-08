@@ -28,14 +28,3 @@ class PermistionAuth:
                 # st.write("Found: ", sql)
                 return resQuery[0][0]
             # st.write("Next: ", sql)
-
-
-# def signup():
-#     # mail ==
-#     return 1
-#
-# def forgetPassword():
-#     return 1
-#
-# def changePassword():
-#     return 1
