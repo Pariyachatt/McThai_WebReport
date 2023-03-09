@@ -1,0 +1,22 @@
+Python 3.9.0
+https://computingforgeeks.com/install-latest-python-on-centos-linux/
+
+Streamlit
+pip install streamlit
+pip install streamlit-nested-layout
+pip install streamlit-aggrid
+pip install streamlit-option-menu
+pip install st_autorefresh
+
+Snowflake
+pip install -r https://raw.githubusercontent.com/snowflakedb/snowflake-connector-python/v2.9.0/tested_requirements/requirements_39.reqs
+
+pip install snowflake-sqlalchemy
+
+https://docs.snowflake.com/en/user-guide/python-connector-install.html
+*รายละเอียดเพิ่มเติม
+
+คำสั่ง รัน streamlit
+streamlit run ./Net_Sales_Report.py
+
+## PM2 Management

@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import streamlit.components.v1 as components
 from backend.logins.verified_change_profile import *
+from backend.logins.verified_change_hint import *
 
 
 class ProfileSetting:
@@ -19,13 +20,17 @@ class ProfileSetting:
             cNewPass = st.text_input("New Password", type="password", max_chars=15)
             cConfPass = st.text_input("Confirm Password", type="password", max_chars=15)
             if st.button("UPDTAE PASSWORD"):
-                VCProfile = VerifiedChangeProfile(self.userCurrent, cOldPass,cNewPass,cConfPass)
-                VCProfile.checkOldPassowd()
+                with st.spinner('Update...'):
+                    VCProfile = VerifiedChangeProfile(self.userCurrent, cOldPass,cNewPass,cConfPass)
+                    VCProfile.actionVerify()
 
         with st.expander("CHANGE YOUR HINT"):
             components.html("""<hr>""",height=30)
-            cHint = st.text_input("Enter Hint", max_chars=4, placeholder='Insert 4-digit.')
+            cOldHint = st.text_input("Old Hint", max_chars=4, placeholder='Insert 4-digit.')
+            cNewHint = st.text_input("New Hint", max_chars=4, placeholder='Insert 4-digit.')
             if st.button("UPDTAE HINT"):
-                pass
+                with st.spinner('Update...'):
+                    VCHint = VerifiedChangeHint(self.userCurrent, cOldHint,cNewHint)
+                    VCHint.actionVerify()
     def actionProfileUi(self):
         self.changePasswordUI()

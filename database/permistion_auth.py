@@ -21,10 +21,13 @@ class PermistionAuth:
         self.DBSnowflake = DBSnowflake()
 
     def checkAlive(self):
+        rold_dict = {}
+
         for type in self.tpyesList:
             sql = """ SELECT """+ type +"""_name, """+ type +"""_email FROM """+ self.userUlive +""" WHERE """+ type +"""_email='"""+ self.mailAuth +"""' LIMIT 1; """
             resQuery = self.DBSnowflake.run_query(sql)
             if resQuery:
                 # st.write("Found: ", sql)
+                # rold_dict{}
                 return resQuery[0][0]
             # st.write("Next: ", sql)
