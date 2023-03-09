@@ -1,0 +1,14 @@
+select top 100 * from mc1.vw_Net_Sales_Report where "Date" between '2022-12-01' and '2022-12-07' and profit_name = 'JOE';
+
+select top 100 * from mc1.vw_Net_Sales_Report where "Date" between '2022-12-01' and '2022-12-07' and profit_name = 'JOE' and patch_name = 'EK';
+
+select top 100 * from mc1.vw_Net_Sales_Report where "Date" between '2022-12-01' and '2022-12-07' and profit_name = 'JOE' and patch_name = 'EK' and store_code::number = '256';
+
+
+-----------------------
+if user_level = 'profit'
+    then use p_profit_name
+elif user_level = 'patch'
+    then use p_profit_name and p_patch_name
+else
+    then use p_profit_name and p_patch_name and p_store_code

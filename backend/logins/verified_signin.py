@@ -1,6 +1,7 @@
 import streamlit as st
-from database.snf_auth_connect import *
-# from database.permistion_auth import *
+from database.pass_auth import *
+
+from backend.logins.verified_authen_parent import *
 
 
 class VerifiedSignIn():
@@ -10,17 +11,7 @@ class VerifiedSignIn():
         self.status = list()
         self.message = ''
 
-    def emptyUserPass(self):
-        status = False
-        if len(self.vuser) <= 0:
-            self.message = "Please insert you email."
-            st.error(self.message, icon="🚨")
-        elif len(self.vpass) <= 0:
-            self.message = "Please insert you password."
-            st.error(self.message, icon="🚨")
-        else:
-            status = True
-        self.status.append(status)
+        self.AuthenParent = verifiedAuthenParent(self.vuser, self.vpass)
 
     def checkEmailAuth(self):
         # check:  AD ->  table auth
@@ -34,7 +25,7 @@ class VerifiedSignIn():
 
     def actionVerify(self):
         with st.spinner('Verifying...'):
-            self.emptyUserPass()
+            self.status.append(self.AuthenParent.emptyUserPass())
             self.checkEmailAuth()
         try:
             self.status.index(False)

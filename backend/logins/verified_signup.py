@@ -1,13 +1,8 @@
 import streamlit as st
-from database.snf_auth_connect import *
+from database.pass_auth import *
 from database.permistion_auth import *
 
-
-# class ClName2():
-#     def __init__(self, mail):
-#         self.arg = mail
-#     def get2(self):
-#         return "yes"
+from backend.logins.verified_authen_parent import *
 
 class VerifiedSignUp():
     def __init__(self, user, newpass, confpass, hint):
@@ -18,40 +13,7 @@ class VerifiedSignUp():
         self.status = list()
         self.message = ''
 
-
-    def matchPassword(self):
-        status = False
-        if self.newpass != self.confpass:
-            self.message = "Password and Confirm Password dose not match."
-            st.error(self.message, icon="🚨")
-        else:
-            status = True
-        self.status.append(status)
-        # return True if self.status else False
-
-    def digitPassword(self):
-        status = False
-        if len(self.newpass) <= 7:
-            self.message = "Please try between 'New password' 8 and 15 digit."
-            st.error(self.message, icon="🚨")
-        elif len(self.confpass) <= 7:
-            self.message = "Please try between 'Confirm password' 8 and 15 digit."
-            st.error(self.message, icon="🚨")
-        else:
-            status = True
-        self.status.append(status)
-
-    def checkEmailSignUp(self):
-        PAuth = PassAuth(self.user, self.newpass)
-        if PAuth.checkSignUp():
-        # if PAuth.checkSignUp(True):
-            # self.status.append(PAuth.checkSignUp())
-            self.status.append(False)
-            self.message = "An account with Email already exists."
-            st.warning(self.message, icon="⚠️")
-        else:
-            self.status.append(True)
-
+        self.AuthenParent = verifiedAuthenParent(self.user, self.newpass,self.confpass)
 
     def checkPermistionAuth(self):
         PermiAuth = PermistionAuth(self.user)
@@ -61,39 +23,22 @@ class VerifiedSignUp():
             self.message = "Your Email not authorized!"
             st.error(self.message, icon="🚨")
         else:
-            # if function retain username and password into tabel.
             self.status.append(True)
-            # self.message = "Role '"+ resPeralive +"' detected and ready to apply."
-            # st.success(self.message, icon="✅")
-
-    def digitHint(self):
-        status = False
-        if len(self.hint) < 4:
-            self.message = "Hint must equal 4 digit."
-            st.error(self.message, icon="🚨")
-        elif self.hint.isnumeric() == False:
-            self.message = "Insert with Hint number only."
-            st.error(self.message, icon="🚨")
-        else:
-            status = True
-        self.status.append(status)
 
     def actionVerify(self):
         with st.spinner('Verifying...'):
-            self.matchPassword()
-            self.digitPassword()
-            self.checkEmailSignUp()
-            self.digitHint()
             self.checkPermistionAuth()
-
+            self.status.append(self.AuthenParent.matchPassword())
+            self.status.append(self.AuthenParent.digitPassword())
+            self.status.append(self.AuthenParent.checkEmailSignUp())
+            self.status.append(self.AuthenParent.digitHint(self.hint))
         try:
             self.status.index(False)
-            # st.write("Stop action!")
         except Exception as e:
+            # Send "mail pass hint" to save.
             PAuth = PassAuth(self.user, self.newpass)
             _resAddUser = PAuth.addUserAuth(self.hint)
-            # st.write("_resAddUser: ", _resAddUser)
-            # python sql return done
+            # Python sql return done
             if _resAddUser == 'done':
                 st.success('Save successful!', icon="✅")
             else:

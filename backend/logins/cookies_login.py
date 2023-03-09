@@ -58,9 +58,11 @@ class CookiesLogin:
         return cookies_profile
         # return 'suwit------'
 
-    def updateTimeCookiesAlive(self):
+    def updateTimeCookiesAlive(self, mail):
+        self.cookies["username"] = mail
         self.cookies["time_cookies_alive"] = "2"  #Hours
         self.cookies["time_cookies_start"] = str(datetime.now())
 
     def destroyTimeCookiesAlive(self):
         self.cookies["time_cookies_alive"] = "0"  #Hours
+        self.cookies["time_cookies_start"] = str(datetime.now())

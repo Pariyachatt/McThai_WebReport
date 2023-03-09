@@ -16,8 +16,17 @@ from backend.logins.verified_forgot import *
 # pip install streamlit-option-menu
 
 # Pages logic
-if 'page' not in st.session_state: st.session_state.page = 0
+CkLogin = CookiesLogin()
+if 'page' not in st.session_state:
+    st.session_state.page = 0
+    CkLogin.destroyTimeCookiesAlive()
 if 'page_detail' not in st.session_state: st.session_state.page_detail = "none"
+
+c_remaining =  CkLogin.cookiesRemaining()['cookies_remaining']
+if c_remaining < 0:
+    st.session_state.page = False
+else:
+    st.session_state.page = True
 
 def login_bnt():
     st.session_state.page = True
@@ -25,12 +34,6 @@ def logout_bnt():
     st.session_state.page = False
     st.session_state.page_detail = "none"
 
-CkLogin = CookiesLogin()
-c_remaining =  CkLogin.cookiesRemaining()['cookies_remaining']
-if c_remaining < 0:
-    st.session_state.page = False
-else:
-    st.session_state.page = True
 
 # # DEBUG:
 st.write("st.session_state.page: ", st.session_state.page)
@@ -54,7 +57,7 @@ if not st.session_state.page:
         if actionLogin:
             VerifiedSignIn = VerifiedSignIn(email, password)
             if VerifiedSignIn.actionVerify():
-                CkLogin.updateTimeCookiesAlive()
+                CkLogin.updateTimeCookiesAlive(email)
                 login_bnt()
                 countRef = st_autorefresh(interval=2000, limit=3)
                 # st.write("countRef: ", countRef)
@@ -63,7 +66,7 @@ if not st.session_state.page:
         ## FORGOT PASSWORD
         with st.expander("FORGOT PASSWORD"):
             components.html("""<hr>""",height=30)
-            fgEmail = st.text_input("Email", placeholder='name@web.com')
+            fgEmail = st.text_input("Email", "Krisana.Charoensirinukul@th.mcd.com", placeholder='name@web.com')
             fgHint = st.text_input("Enter Hint",'1111', max_chars=4, placeholder='Insert 4-digit.')
             fgNewPass = st.text_input("New Password", type="password", max_chars=15)
             fgConfPass = st.text_input("Confirm Password", type="password", max_chars=15)
@@ -76,7 +79,7 @@ if not st.session_state.page:
         ## SIGN UP
         with st.expander("SIGN UP"):
             components.html("""<hr>""",height=30)
-            suEmail = st.text_input("Your Email",'Borompong.Phairatphiboon@th.mcd.com',placeholder='mail@domain.com')
+            suEmail = st.text_input("Your Email",'Nichapa.Buapis@th.mcd.com',placeholder='mail@domain.com')
             suPass = st.text_input("Enter Password",'11111111', type="password", placeholder='Insert 8 and 15 digit.', max_chars=15)
             suConfPass = st.text_input("Enter Confirm Password",'11111111', type="password",placeholder='Insert 8 and 15 digit', max_chars=15)
             suHint = st.text_input("Enter Hint", value=1111, max_chars=4)
