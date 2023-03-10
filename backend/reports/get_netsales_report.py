@@ -6,9 +6,12 @@ class getNetsalesReport:
         self.DB_USER_AUTH = 'MCTHAIDP.MC1.vw_Net_Sales_Report'
         self.DBSnowflake = DBSnowflake()
 
-
-    def getReport(self, s_date, e_date, debug=False):
+    def getReport(self, s_date, e_date, profit="", debug=False):
         # sql = """ SELECT top 3 "Date", "Day",
+        profit_con = ""
+        if profit:
+            profit_con = " AND PROFIT_NAME='"+profit+"'"
+
         sql = """ SELECT "Date", "Day",
         PROFIT_NAME,
         PATCH_NAME,
@@ -31,7 +34,9 @@ class getNetsalesReport:
         "%Achieve Sales"
         FROM """+self.DB_USER_AUTH+"""
         WHERE "Date" BETWEEN '"""+s_date+"""'
-        AND '"""+e_date+"""';"""
+        AND '"""+e_date+"""'
+        """+profit_con+"""
+        ;"""
         if debug:
             st.write("getReport: ", sql)
         return self.DBSnowflake.report_query(sql)

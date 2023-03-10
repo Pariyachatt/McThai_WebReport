@@ -16,7 +16,7 @@ class TableLayouts:
     def __init__(self):
         self.getNetsalesR = getNetsalesReport()
 
-    def reportGrid(self, s_date, e_date):
+    def reportGrid(self, s_date, e_date, role_name):
         yearCurr = str(s_date.year)
         yearOld = str(s_date.year-1)
         columnDefs = [
@@ -80,9 +80,6 @@ class TableLayouts:
                             }
                         }""")
                     }
-
-        # sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), True)
-        sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date))
-        # st.write(sqlRespReport)
-        # df = pd.read_csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/airline-safety/airline-safety.csv')
+        sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), role_name, True)
+        # sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), role_name)
         AgGrid(sqlRespReport, gridOptions=options, allow_unsafe_jscode=True)

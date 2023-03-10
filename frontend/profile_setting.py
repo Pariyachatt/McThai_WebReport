@@ -11,7 +11,8 @@ class ProfileSetting:
         st.title("Profile Setting.")
         components.html("""<hr align="center" width="100%">""", height=10 )
         st.metric(label="", value="Email", delta=st.session_state.user)
-        st.metric(label="", value="Role", delta=st.session_state.role)
+        st.metric(label="", value="Role Type", delta=st.session_state.role["role_type"])
+        st.metric(label="", value="Role Name", delta=st.session_state.role["role_name"])
 
     def changePasswordUI(self):
         with st.expander("CHANGE YOUR PASSWORD"):
