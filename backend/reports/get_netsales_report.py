@@ -7,8 +7,31 @@ class getNetsalesReport:
         self.DBSnowflake = DBSnowflake()
 
 
-    def getReport(self):
-        sql = """ select top 3 * from """+self.DB_USER_AUTH+"""; """
-        # sql = """INSERT INTO """+self.DB_USER_AUTH+"""( USER_MAIL, PASSWORD, hint)VALUES('"""+self.mailAuth+"""', '"""+_passAuth+"""', '"""+hint+"""');"""
-
+    def getReport(self, s_date, e_date, debug=False):
+        # sql = """ SELECT top 3 "Date", "Day",
+        sql = """ SELECT "Date", "Day",
+        PROFIT_NAME,
+        PATCH_NAME,
+        STORE_CODE,
+        "STORE NAME" as STORE_NAME,
+        "Sales Target",
+        "Accum Sales",
+        "CY Sales",
+        "CY Accu Sales",
+        "CY GC",
+        "CY Accu GC",
+        "CY AC",
+        "LY Sales",
+        "LY Accu Sales" AS ly_accu_sales,
+        "LY GC",
+        "LY Accu GC",
+        "LY AC",
+        "% Comp. Sales" AS p_comp_sales,
+        "% Comp. GC" AS p_comp_gv,
+        "%Achieve Sales"
+        FROM """+self.DB_USER_AUTH+"""
+        WHERE "Date" BETWEEN '"""+s_date+"""'
+        AND '"""+e_date+"""';"""
+        if debug:
+            st.write("getReport: ", sql)
         return self.DBSnowflake.report_query(sql)

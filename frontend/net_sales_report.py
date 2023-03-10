@@ -2,13 +2,13 @@ import streamlit as st
 from database.dbConfig import *
 from frontend.layouts.table_layout import *
 import datetime
-# import streamlit_nested_layout as sn
 from PIL import Image
 
 def netSalesReport():
     Layouts = TableLayouts()
     # with open('./css/style.css') as f:
     #     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
     if 'max_date' not in st.session_state:
         st.session_state.max_date = datetime.datetime.now() + datetime.timedelta(
             days=31)
@@ -21,6 +21,7 @@ def netSalesReport():
         if st.session_state.s_date.year != st.session_state.max_date.year:
             st.session_state.max_date = datetime.datetime.strptime(
                 str(st.session_state.s_date.year)+"/"+"12/31", "%Y/%m/%d")
+
     st.header("Net Sales Report")
     with st.container():
         container_header = st.columns(1)
@@ -43,5 +44,5 @@ def netSalesReport():
         with col_btnS[0]:
             st.session_state.btn = st.button("Search")
     if st.session_state.btn:
-        Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date)
-        # Layouts.showReport(st.session_state.s_date, st.session_state.e_date)
+        with st.spinner('Loading...'):
+            Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date)

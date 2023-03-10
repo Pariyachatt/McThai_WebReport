@@ -34,7 +34,7 @@ class CookiesLogin:
         cookies_expiry_info = dict()
         if self.cookies["time_cookies_start"]:
             # 2023-02-21 14:01:44.161458
-            time_cookies_alive = int(self.cookies["time_cookies_alive"])
+            time_cookies_alive = float(self.cookies["time_cookies_alive"])
             str_timestamp = self.cookies["time_cookies_start"]
             date_format_str = '%Y-%m-%d %H:%M:%S.%f'
             datetime_start = datetime.strptime(str_timestamp, date_format_str)
