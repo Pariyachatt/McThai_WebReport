@@ -14,40 +14,31 @@ from backend.logins.verified_forgot import *
 
 # addition packet
 # pip install streamlit-option-menu
-st.set_page_config(
-    page_title="Web Report",
-    layout="wide",
-    page_icon=None,
-)
+# st.set_page_config(page_title="Web Report", layout="wide")
 
-# Pages logic
-CkLogin = CookiesLogin()
-if 'page' not in st.session_state:
-    st.session_state.page = False
-    # CkLogin.destroyTimeCookiesAlive()
+# Pages init session page
+if 'page' not in st.session_state: st.session_state.page = False
 if 'page_detail' not in st.session_state: st.session_state.page_detail = "none"
 
+CkLogin = CookiesLogin()
 c_remaining =  CkLogin.cookiesRemaining()['cookies_remaining']
 if c_remaining < 0:
     st.session_state.page = False
 else:
     st.session_state.page = True
 
-def login_bnt():
-    st.session_state.page = True
-
+def login_bnt(): st.session_state.page = True
 def logout_bnt():
     st.session_state.page = False
     st.session_state.page_detail = "none"
 
-
+# st.set_page_config(page_title="Ex-stream-ly Cool App", layout="wide")
 # # DEBUG:
 st.write("st.session_state.page: ", st.session_state.page)
 
 ph = st.empty()
 if not st.session_state.page:
     with ph.container():
-
         # Action login
         st.title(':lock_with_ink_pen: User Authentication.')
 
@@ -97,6 +88,11 @@ if not st.session_state.page:
 
 # show menu left
 elif st.session_state.page:
+    username =  CkLogin.getProfile()['username_prof']
+    st.session_state.user = username
+    PerAuth = PermistionAuth(username)
+    st.session_state.role = PerAuth.checkAlive()
+
     with st.sidebar:
         selected = option_menu("Web Reports", ["Net Sales Report",'Profile','Logout'],
             icons=['card-checklist', 'person','power'], menu_icon="bi-house-door-fill", default_index=0)
@@ -110,15 +106,11 @@ elif st.session_state.page:
             st.session_state.page_detail = 'Net_Sales_Report'
         elif selected == 'Profile':
             st.session_state.page_detail = 'ProfileSetting'
-            username =  CkLogin.getProfile()['username_prof']
-            st.session_state.user = username
-            PerAuth = PermistionAuth(username)
-            st.session_state.role = PerAuth.checkAlive()
 
 
 if st.session_state.page_detail == 'Net_Sales_Report':
-
-    netSalesReport()
+    NetSalesReport = NetSalesReport()
+    NetSalesReport.loadPage()
 elif st.session_state.page_detail == 'ProfileSetting':
     ProfileSetting = ProfileSetting()
     ProfileSetting.actionProfileUi()
