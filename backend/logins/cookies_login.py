@@ -44,9 +44,9 @@ class CookiesLogin:
             cookies_quota = (datetime_end - datetime_start).total_seconds() / 60 #minutes_diff
 
             # DEBUG:
-            # st.write("Welcome: ", self.cookies["username"])
-            # st.write("cookies_remaininga: ", cookies_remaining)
-            # st.write("cookies_quota: ", cookies_quota)
+            st.write("Welcome: ", self.cookies["username"])
+            st.write("cookies_remaininga: ", cookies_remaining)
+            st.write("cookies_quota: ", cookies_quota)
 
             cookies_expiry_info['cookies_remaining'] = cookies_remaining
             cookies_expiry_info['cookies_quota'] = cookies_quota

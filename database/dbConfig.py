@@ -10,7 +10,7 @@ def connectDB(sql):
         account='na61469.southeast-asia.azure',
         warehouses='MCTHAI_WH',
         database='mcthaidp',
-        schema='mc1'
+        schema='mc1',
     )
     cs = ctx.cursor()
     # st.write(cs)
