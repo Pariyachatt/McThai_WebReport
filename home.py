@@ -14,12 +14,17 @@ from backend.logins.verified_forgot import *
 
 # addition packet
 # pip install streamlit-option-menu
+st.set_page_config(
+    page_title="Web Report",
+    layout="wide",
+    page_icon=None,
+)
 
 # Pages logic
 CkLogin = CookiesLogin()
 if 'page' not in st.session_state:
-    st.session_state.page = 0
-    CkLogin.destroyTimeCookiesAlive()
+    st.session_state.page = False
+    # CkLogin.destroyTimeCookiesAlive()
 if 'page_detail' not in st.session_state: st.session_state.page_detail = "none"
 
 c_remaining =  CkLogin.cookiesRemaining()['cookies_remaining']
@@ -30,6 +35,7 @@ else:
 
 def login_bnt():
     st.session_state.page = True
+
 def logout_bnt():
     st.session_state.page = False
     st.session_state.page_detail = "none"
@@ -111,6 +117,7 @@ elif st.session_state.page:
 
 
 if st.session_state.page_detail == 'Net_Sales_Report':
+
     netSalesReport()
 elif st.session_state.page_detail == 'ProfileSetting':
     ProfileSetting = ProfileSetting()
