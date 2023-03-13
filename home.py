@@ -92,6 +92,7 @@ elif st.session_state.page:
     st.session_state.user = username
     PerAuth = PermistionAuth(username)
     st.session_state.role = PerAuth.checkAlive()
+
     # st.write("dddddddddddddddd")
 
     with st.sidebar:

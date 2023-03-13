@@ -37,7 +37,7 @@ class PermistionAuth:
                 user_role['profit_name'] = resQuery[0][5]
 
                 st.write("type:  ", type)
-                st.write("resQuery  ", resQuery)
+                # st.write("resQuery  ", resQuery)
                 return user_role
 
     # ---------- Report select option ---------- #
@@ -60,18 +60,13 @@ class PermistionAuth:
         return resfm
 
     # for Administrator role
-    def getProfitName(self):
-        pass
-
-    # for Profit role
-    # @st.cache_resource
-    def getProfitName(self, profit, debug=False):
+    def getProfitName(self, debug=False):
         sql = """
-        SELECT DISTINCT(PATCH_NAME) FROM """+ self.userUlive +""";
-        """
+        SELECT DISTINCT(PROFIT_NAME) FROM """+ self.userUlive +""";"""
         if debug:
             st.write("getProfitName >> ",sql)
         return self.setFormat(self.DBSnowflake.run_query(sql))
+
 
     def getPatchName(self, profit, debug=False):
         sql = """
@@ -83,15 +78,18 @@ class PermistionAuth:
             st.write("getPatchName >> ",sql)
         return self.setFormat(self.DBSnowflake.run_query(sql))
 
-
     # for Patch role
-    def getStoreNameCode(self, profit, patchs, debug=False):
+    def getStoreNameCode(self, profit, patchs, type, debug=False):
+        if type == 'ADMIN':
+            condition_mail = ""
+        else:
+            condition_mail = "AND "+type+"_EMAIL='"+self.mailAuth+"'"
         sql = """
         SELECT DISTINCT(CONCAT(STORE_CODE,'|',STORE_NAME)) FROM """+ self.userUlive +"""
-        WHERE PROFIT_NAME='"""+profit+"""'
+        WHERE PROFIT_NAME IN ("""+profit+""")
         AND PATCH_NAME IN ("""+patchs+""")
-        AND PROFIT_EMAIL='"""+self.mailAuth+"""';
+        """+condition_mail+""";
         """
         if debug:
-            st.write("getPatchName >> ",sql)
+            st.write("getStoreNameCode >> ",sql)
         return self.setFormat(self.DBSnowflake.run_query(sql))

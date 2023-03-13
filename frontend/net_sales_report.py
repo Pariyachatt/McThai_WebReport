@@ -36,64 +36,70 @@ class NetSalesReport:
             with container_header[0]:
                 col_filter = st.columns([0.33, 0.33, 0.33], gap='small')
 
-                status_profit = True
-                status_patch = True
-                status_store = True
                 # Default is all
-                profit_search = ""
-                patch_search = ""
-                store_search = ""
+                # profit_search = ""
+                # patch_search = ""
+                # store_search = ""
 
                 store_code_search = st.session_state.role['store_code']
                 store_name_search = st.session_state.role['store_name']
                 patch_search = st.session_state.role['patch_name']
                 profit_search = st.session_state.role['profit_name']
 
-                if st.session_state.role['role_type'] == 'PROFIT':
-                    # status_profit = False
-                    status_patch = False
-                elif st.session_state.role['role_type'] == 'PATCH':
-                    pass
-                    status_store = False
-                # elif st.session_state.role['role_type'] == 'STORE':
-                #     # status_profit = False
-                #     # status_patch = False
-                #     # status_store = False
-                #     pass
+                role_type = st.session_state.role['role_type']
+                    # if st.session_state.role['role_type'] in ['PATCH','PROFIT','STORE']:
+                status_profit = False
+                status_patch = False
+                status_store = False
+                st.write("role_type____=",role_type)
+
+                if role_type == 'STORE':
+                    status_profit = True
+                    status_patch = True
+                    status_store = True
+                elif role_type == 'PATCH':
+                    status_profit = True
+                    status_patch = True
+                elif role_type == 'PROFIT':
+                    status_profit = True
+                else:
+                    role_type = 'ADMIN'
+
 
                 with col_filter[0]:
-                    # st.write("profit_search:", profit_search)
-                    st.text_input("Profit Name", profit_search, disabled=status_profit)
+                    # ----- PROFIT -----#
+                    if role_type in ['PROFIT','PATCH','STORE']:
+                        st.text_input("Profit Name.", profit_search, disabled=status_profit)
+                        optionsProfit = [profit_search]
+                    else:
+                        listProfitname = self.PARole.getProfitName()
+                        optionsProfit = st.multiselect('Profit Name..', listProfitname, disabled=status_profit)
+
                     s_date = st.date_input(
                         "Start Date", min_value=st.session_state.min_date, key='s_date', on_change=self.s_date_onchanged
                     )
                 with col_filter[1]:
-                    # listPatchname = self.PARole.getPatchName(profit_search,True)
-                    if st.session_state.role['role_type'] == 'STORE' or st.session_state.role['role_type'] == 'PATCH':
+                    #----- PATCH -----#
+                    if role_type in ['PATCH','STORE']:
                         st.text_input("Patch Name", patch_search, disabled=status_patch)
                         optionsPatch = [patch_search]
                     else:
-                        # listPatchname = [patch_search]
                         listPatchname = self.PARole.getPatchName(profit_search)
                         optionsPatch = st.multiselect('Patch Name', listPatchname, disabled=status_patch)
-
 
                     e_date = st.date_input(
                         "End Date", key='e_date', min_value=st.session_state.s_date, max_value=st.session_state.max_date, value=st.session_state.max_date
                     )
-                    # st.text_input("Store Name", disabled=True)
+
                 with col_filter[2]:
-                    if st.session_state.role['role_type'] == 'STORE':
+                    #----- STORE -----#
+                    if role_type == 'STORE':
                         st.text_input("Store Code|Name", store_name_search, disabled=status_store)
                     else:
-                        patch_format = self.PARole.sqlRoleFormat(optionsPatch, 'get_option')
-                        # try:
-                        # except Exception as e:
-                        #     patch_format = self.PARole.sqlRoleFormat(optionsPatch, 'get_option')
-
-                        listStore = self.PARole.getStoreNameCode(profit_search, patch_format)
-
-                        optionsStore = st.multiselect('Store Code|Name', listStore, disabled=status_profit)
+                        profit_format = self.PARole.sqlRoleFormat(optionsProfit, 'fmt')
+                        patch_format = self.PARole.sqlRoleFormat(optionsPatch, 'fmt')
+                        listStore = self.PARole.getStoreNameCode(profit_format, patch_format, role_type)
+                        optionsStore = st.multiselect('Store Code|Name', listStore, disabled=status_store)
 
             col_btnS = st.columns(1)
             with col_btnS[0]:
@@ -104,7 +110,6 @@ class NetSalesReport:
             # st.write("st.session_state.s_date: "+ str(st.session_state.s_date))
             # st.write("st.session_state.e_date: "+str(st.session_state.e_date))
             with st.spinner('Loading...'):
-
                 storeCode_list = list()
                 if optionsStore:
                     st.write("listStore: ", optionsStore)
@@ -121,6 +126,3 @@ class NetSalesReport:
                 self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, profit_search, patch_search, store_search)
 
             st.session_state.btn = False
-
-                # with st.spinner('Patch name to Loading...'):
-                #     self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, role_name)
