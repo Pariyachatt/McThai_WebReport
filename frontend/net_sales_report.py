@@ -11,6 +11,8 @@ class NetSalesReport:
         self.Layouts = TableLayouts()
         self.PARole = PermistionAuth(st.session_state.user)
 
+        st.write("Mail user: ",st.session_state.user)
+
     def s_date_onchanged(self):
         st.session_state.max_date = ""
         st.session_state.max_date = st.session_state.s_date + datetime.timedelta(days=31)
@@ -34,48 +36,91 @@ class NetSalesReport:
             with container_header[0]:
                 col_filter = st.columns([0.33, 0.33, 0.33], gap='small')
 
-                status_role = True
-                role_name = ""
+                status_profit = True
+                status_patch = True
+                status_store = True
+                # Default is all
+                profit_search = ""
+                patch_search = ""
+                store_search = ""
+
+                store_code_search = st.session_state.role['store_code']
+                store_name_search = st.session_state.role['store_name']
+                patch_search = st.session_state.role['patch_name']
+                profit_search = st.session_state.role['profit_name']
+
                 if st.session_state.role['role_type'] == 'PROFIT':
-                    status_role = False
-                    role_name = st.session_state.role['role_name']
+                    # status_profit = False
+                    status_patch = False
+                elif st.session_state.role['role_type'] == 'PATCH':
+                    pass
+                    status_store = False
+                # elif st.session_state.role['role_type'] == 'STORE':
+                #     # status_profit = False
+                #     # status_patch = False
+                #     # status_store = False
+                #     pass
 
                 with col_filter[0]:
-                    st.text_input("Profit Name", role_name, disabled=status_role)
+                    # st.write("profit_search:", profit_search)
+                    st.text_input("Profit Name", profit_search, disabled=status_profit)
                     s_date = st.date_input(
                         "Start Date", min_value=st.session_state.min_date, key='s_date', on_change=self.s_date_onchanged
                     )
-
                 with col_filter[1]:
-                    listPatchname = self.PARole.getPatchName(role_name)
-                    optionsPatch = st.multiselect(
-                        'Patch Name',
-                        listPatchname, args=True)
-                    # self.callbackReportGrid(role_name)
-                    # st.write('You selected:', optionsPatch)
-                    # st.text_input("Patch Name", disabled=True)
+                    # listPatchname = self.PARole.getPatchName(profit_search,True)
+                    if st.session_state.role['role_type'] == 'STORE' or st.session_state.role['role_type'] == 'PATCH':
+                        st.text_input("Patch Name", patch_search, disabled=status_patch)
+                        optionsPatch = [patch_search]
+                    else:
+                        # listPatchname = [patch_search]
+                        listPatchname = self.PARole.getPatchName(profit_search)
+                        optionsPatch = st.multiselect('Patch Name', listPatchname, disabled=status_patch)
+
+
                     e_date = st.date_input(
                         "End Date", key='e_date', min_value=st.session_state.s_date, max_value=st.session_state.max_date, value=st.session_state.max_date
                     )
+                    # st.text_input("Store Name", disabled=True)
                 with col_filter[2]:
-                    st.text_input("Store code")
-                    st.text_input("Store Name", disabled=True)
-                #     s_date = st.date_input(
-                #         "Start Date", min_value=st.session_state.min_date, key='s_date', on_change=self.s_date_onchanged
-                #     )
-                # with col_filter[3]:
-                #     e_date = st.date_input(
-                #         "End Date", key='e_date', min_value=st.session_state.s_date, max_value=st.session_state.max_date, value=st.session_state.max_date
-                #     )
+                    if st.session_state.role['role_type'] == 'STORE':
+                        st.text_input("Store Code|Name", store_name_search, disabled=status_store)
+                    else:
+                        patch_format = self.PARole.sqlRoleFormat(optionsPatch, 'get_option')
+                        # try:
+                        # except Exception as e:
+                        #     patch_format = self.PARole.sqlRoleFormat(optionsPatch, 'get_option')
+
+                        listStore = self.PARole.getStoreNameCode(profit_search, patch_format)
+
+                        optionsStore = st.multiselect('Store Code|Name', listStore, disabled=status_profit)
+
             col_btnS = st.columns(1)
             with col_btnS[0]:
                 st.session_state.btn = st.button("Search")
+        st.write("st.session_state.btn: ", st.session_state.btn)
+        st.cache_data
         if st.session_state.btn:
             # st.write("st.session_state.s_date: "+ str(st.session_state.s_date))
             # st.write("st.session_state.e_date: "+str(st.session_state.e_date))
             with st.spinner('Loading...'):
-                self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, role_name)
 
-        if listPatchname:
-            with st.spinner('Patch name to Loading...'):
-                self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, role_name)
+                storeCode_list = list()
+                if optionsStore:
+                    st.write("listStore: ", optionsStore)
+                    for sc in optionsStore:
+                        # st.write("sc: ", sc)
+                        # st.write("split: ", sc.split("|")[0])
+                        storeCode_list.append(sc.split("|")[0])
+
+                    store_search= self.PARole.sqlRoleFormat(storeCode_list)
+                    patch_search= self.PARole.sqlRoleFormat(optionsPatch)
+                elif optionsPatch:
+                    patch_search= self.PARole.sqlRoleFormat(optionsPatch)
+
+                self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, profit_search, patch_search, store_search)
+
+            st.session_state.btn = False
+
+                # with st.spinner('Patch name to Loading...'):
+                #     self.Layouts.reportGrid(st.session_state.s_date, st.session_state.e_date, role_name)

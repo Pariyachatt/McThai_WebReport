@@ -16,7 +16,7 @@ class TableLayouts:
     def __init__(self):
         self.getNetsalesR = getNetsalesReport()
 
-    def reportGrid(self, s_date, e_date, role_name):
+    def reportGrid(self, s_date, e_date, profit_search, patch_search, store_search):
         yearCurr = str(s_date.year)
         yearOld = str(s_date.year-1)
         columnDefs = [
@@ -80,6 +80,6 @@ class TableLayouts:
                             }
                         }""")
                     }
-        sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), role_name, True)
+        sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), profit_search, patch_search, store_search, True)
         # sqlRespReport = self.getNetsalesR.getReport(str(s_date), str(e_date), role_name)
         AgGrid(sqlRespReport, gridOptions=options, allow_unsafe_jscode=True)
