@@ -22,20 +22,37 @@ class PermistionAuth:
 
     def checkAlive(self):
         user_role = dict()
+        found_role_type = ""
+        before_role_select = list()
 
         for type in self.tpyesList:
-            sql = """ SELECT """+ type +"""_name, """+ type +"""_email FROM """+ self.userUlive +""" WHERE """+ type +"""_email='"""+ self.mailAuth +"""' LIMIT 1; """
+            # sql = """ SELECT """+ type +"""_name, """+ type +"""_email FROM """+ self.userUlive +""" WHERE """+ type +"""_email='"""+ self.mailAuth +"""' LIMIT 1; """
+            sql = """ SELECT * FROM """+ self.userUlive +""" WHERE """+ type +"""_email='"""+ self.mailAuth +"""' LIMIT 1; """
             resQuery = self.DBSnowflake.run_query(sql)
             if resQuery:
-                # st.write("Found: ", sql)
-                # rold_dict{}
                 user_role['role_type'] = type
-                user_role['role_name'] = resQuery[0][0]
+                user_role['store_code'] = resQuery[0][0]
+                user_role['store_name'] = resQuery[0][1]
+                user_role['patch_name'] = resQuery[0][3]
+                user_role['profit_name'] = resQuery[0][5]
+
+                st.write("type:  ", type)
+                # st.write("resQuery  ", resQuery)
                 return user_role
-                # return resQuery[0][0]
-            # st.write("Next: ", sql)
 
     # ---------- Report select option ---------- #
+
+    def sqlRoleFormat(self, optRole, res_con='sql'):
+        p_list = list()
+        for p in optRole:
+            p_list.append(p)
+        if res_con == 'sql':
+            pram = "'',''".join(p_list)
+            return ",'[''"+pram+"'']'"
+        else:
+            pram = "','".join(p_list)
+            return "'"+pram+"'"
+
     def setFormat(self, sqlResp):
         resfm = list()
         for x in sqlResp:
@@ -43,17 +60,36 @@ class PermistionAuth:
         return resfm
 
     # for Administrator role
-    def getProfitName(self):
-        pass
+    def getProfitName(self, debug=False):
+        sql = """
+        SELECT DISTINCT(PROFIT_NAME) FROM """+ self.userUlive +""";"""
+        if debug:
+            st.write("getProfitName >> ",sql)
+        return self.setFormat(self.DBSnowflake.run_query(sql))
 
-    # for Profit role
-    def getPatchName(self, profit,):
+
+    def getPatchName(self, profit, debug=False):
         sql = """
         SELECT DISTINCT(PATCH_NAME) FROM """+ self.userUlive +"""
-        WHERE PROFIT_NAME='"""+profit+"""' AND PROFIT_EMAIL='"""+self.mailAuth+"""';
+        WHERE PROFIT_NAME='"""+profit+"""'
+        AND PROFIT_EMAIL='"""+self.mailAuth+"""';
         """
+        if debug:
+            st.write("getPatchName >> ",sql)
         return self.setFormat(self.DBSnowflake.run_query(sql))
 
     # for Patch role
-    def getStoreName(self):
-        pass
+    def getStoreNameCode(self, profit, patchs, type, debug=False):
+        if type == 'ADMIN':
+            condition_mail = ""
+        else:
+            condition_mail = "AND "+type+"_EMAIL='"+self.mailAuth+"'"
+        sql = """
+        SELECT DISTINCT(CONCAT(STORE_CODE,'|',STORE_NAME)) FROM """+ self.userUlive +"""
+        WHERE PROFIT_NAME IN ("""+profit+""")
+        AND PATCH_NAME IN ("""+patchs+""")
+        """+condition_mail+""";
+        """
+        if debug:
+            st.write("getStoreNameCode >> ",sql)
+        return self.setFormat(self.DBSnowflake.run_query(sql))

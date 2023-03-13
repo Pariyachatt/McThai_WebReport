@@ -93,6 +93,8 @@ elif st.session_state.page:
     PerAuth = PermistionAuth(username)
     st.session_state.role = PerAuth.checkAlive()
 
+    # st.write("dddddddddddddddd")
+
     with st.sidebar:
         selected = option_menu("Web Reports", ["Net Sales Report",'Profile','Logout'],
             icons=['card-checklist', 'person','power'], menu_icon="bi-house-door-fill", default_index=0)

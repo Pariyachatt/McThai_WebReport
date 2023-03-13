@@ -24,7 +24,7 @@ class DBSnowflake:
             database='mcthaidp',
             schema='mc1'
         )
-        
+
     def run_query(self, query):
         with self.conn.cursor() as cur:
             cur.execute(query)
